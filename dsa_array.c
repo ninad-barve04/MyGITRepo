@@ -30,7 +30,7 @@ int main()
 
 	p = (int *)malloc(sizeof(int) * num);
 
-	printf("Enter numbers to add in array:\n");
+	printf("Enter numbers(integers) to add in array:\n");
 
 	for (i = 0; i < num; i++) {
 		scanf("%d", &input);
