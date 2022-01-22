@@ -159,28 +159,66 @@ void remove_node(List *list, int dat) {
 }
 
 
+List sort_list(List list) {
+    int i = 0;
+    List sorted_list;
+    node *num = list;
+    while (num != NULL) {
+        int mindata = num->data;
+        node *temp = num->next;
+        while (temp != NULL) {
+             if ( mindata > temp->data) {
+                mindata = temp->data;
+                int d = num->data;
+                num->data = temp->data;
+                temp->data = d;              
+            }
+            temp = temp->next;
+            i = i + 1;
+        }
+        
+        
+
+        
+        num = num->next;
+    }
+    return list;
+}
+
+
 int main(int argc, char const *argv[])
 {
     List list;
     init_list(&list);
-    for (int i = 1; i < 16; i++) {
-        append_list(&list, i);
-    }
+    
+    append_list(&list, 10);
+    append_list(&list, 5);
+    append_list(&list, 22);
+    append_list(&list, 3);
+    append_list(&list, 17);
+    append_list(&list, 10);
+
+    
     traverse(list);
-    node *x = search_list(list, 12);
-    printf("%d\n", x->data);
+    //node *x = search_list(list, 3);
+    //printf("%d\n", x->data);
 
-    insert_at_index(&list, 123, 5);
+    // insert_at_index(&list, 123, 5);
 
-    insert_before_data(&list, 3, 45);
-    insert_after_data(&list, 3, 41);
-    insert_at_head(&list, 100);
+    // insert_before_data(&list, 3, 45);
+    // insert_after_data(&list, 3, 41);
+    // insert_at_head(&list, 100);
 
 
-    traverse(list);
+    // traverse(list);
 
-    remove_node(&list, 123);
-    traverse(list);
+    // remove_node(&list, 123);
+    // traverse(list);
+
+    List sorted = sort_list(list);
+    printf("Sorted\n");
+    traverse(sorted);
+
     
 
     return 0;
