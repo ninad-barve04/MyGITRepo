@@ -167,7 +167,7 @@ List sort_list(List list) {
         int mindata = num->data;
         node *temp = num->next;
         while (temp != NULL) {
-             if ( mindata > temp->data) {
+            if ( mindata > temp->data) {
                 mindata = temp->data;
                 int d = num->data;
                 num->data = temp->data;
