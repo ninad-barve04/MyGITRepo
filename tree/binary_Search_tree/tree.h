@@ -2,6 +2,8 @@
 #define TREE_H (1)
 
 typedef struct node {
+    //int MIS
+    //char *name
     int data;
     struct node *left, *right;
 }node;

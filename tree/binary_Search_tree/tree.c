@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
+#include "stack.h"
 
 void init_BST(BST *bstree) {
     *bstree = NULL;
@@ -100,6 +101,49 @@ void postorder_traverse(BST tree) {
     postorder_traverse(tree->right);
     printf("%d - ", tree->data);
 }
+
+/*Non recursive post order*/
+void postorder(BST tree) {
+    if (tree == NULL) 
+        return;
+    
+    node *p = tree;
+    node *q = NULL;
+  
+
+    Stack datastk;
+    initStack(&datastk);
+
+    while( p!= NULL || !isEmpty(datastk)){
+    
+        if (p->right) {
+            push(&datastk, p->right);
+        }
+        
+        push(&datastk, p);
+
+        p = p->left;
+         
+        
+        p = pop(&datastk);
+        
+    
+        if (p) {
+            if (p->right && p->right == peek(datastk)) {
+                node *pop_right = pop(&datastk);
+
+                push(&datastk, p);
+                p = p->right;
+            } else {
+                printf("%d - %s\n", p->data);
+                p = NULL;
+            }
+        }
+        
+    } while (!isEmpty(datastk));
+
+}
+
 
 // count, verify, height/depth, level wise traversal, no of leaf and non-leaf
 // nodes
