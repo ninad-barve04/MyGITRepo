@@ -3,7 +3,7 @@
  *
  *       Filename:  array_sorting.c
  *
- *    Description: Array max min value output 
+ *    Description:  Array max min value output 
  *
  *        Version:  1.0
  *        Created:  15/12/21 11:42:47 PM IST

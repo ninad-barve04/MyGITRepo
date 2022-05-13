@@ -2,10 +2,9 @@
 #define TREE_H (1)
 
 typedef struct node {
-    //int MIS
-    //char *name
     int data;
     struct node *left, *right;
+    struct node *parent;
 }node;
 
 typedef node * BST;
@@ -14,7 +13,7 @@ void init_BST(BST *bstree);
 node * make_node(int data);
 
 void insert_node(BST *bstree, int dat);
-void insert_recursion(BST *tree, int dat);
+node * insert_recursion(BST *tree, int dat);
 
 void inorder_traverse(BST tree);
 void preorder_traverse(BST tree);
