@@ -18,6 +18,13 @@ int main(int argc, char const *argv[])
     traverseHeap(heap);
 
     int x = deleteHeap(&heap);
+    deleteHeap(&heap);
+    deleteHeap(&heap);
+    deleteHeap(&heap);
+    deleteHeap(&heap);
+    deleteHeap(&heap);
+    deleteHeap(&heap);
+    
     printf("Deleted element is: %d\n", x);
     traverseHeap(heap);
 

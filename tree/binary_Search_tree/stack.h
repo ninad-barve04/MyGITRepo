@@ -1,6 +1,6 @@
 
 typedef struct st_node {
-    node *data;
+    treenode *data;
     struct st_node * next;
 } st_node;
 
@@ -8,8 +8,8 @@ typedef st_node * Stack;
 
 
 void initStack(Stack *stk);
-void push(Stack *stk, node *datanode);
-node * pop(Stack *stk);
-node * peek(Stack stk);
+void push(Stack *stk, treenode *datanode);
+treenode * pop(Stack *stk);
+treenode * peek(Stack stk);
 int isEmpty(Stack stk);
 void printStack(Stack stk);

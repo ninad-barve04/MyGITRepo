@@ -43,6 +43,9 @@ int main(void)
 
     printf("\nCount non leaf = %d\n\n", count_non_leaf_nodes(tree1));
 
+    int inorder_count = inorder_count_before_data(tree1, 40);
+    printf("Count inorder before 40\ncount = %d\n", inorder_count);
+
     return 0;
 }
 

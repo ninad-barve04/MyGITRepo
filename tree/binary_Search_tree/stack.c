@@ -65,7 +65,7 @@ void printStack(Stack stk) {
     st_node *start_node = stk;
 
     while(start_node != NULL){
-        printf("__%d\n", start_node->data->MIS);
+        printf("__%d\n", start_node->data->data);
         start_node = start_node->next;
     }
     return;

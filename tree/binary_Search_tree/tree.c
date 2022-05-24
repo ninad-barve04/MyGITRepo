@@ -9,8 +9,8 @@ void init_BST(BST *bstree) {
 }
 
 
-node * make_node(int data) {
-    node *newnode = (node *)malloc(sizeof(node));
+treenode * make_node(int data) {
+    treenode *newnode = (treenode *)malloc(sizeof(treenode));
     if (!newnode)
         return NULL;
 
@@ -29,10 +29,10 @@ node * make_node(int data) {
  * 
  * @return node* 
  */
-node * insert_recursion(BST *tree, int dat) {
+treenode * insert_recursion(BST *tree, int dat) {
 
     if (*tree == NULL) {
-        node *newnode = (node *)malloc(sizeof(node));
+        treenode *newnode = (treenode *)malloc(sizeof(treenode));
         newnode->left = NULL;
         newnode->right = NULL;
         newnode->data = dat;
@@ -41,11 +41,11 @@ node * insert_recursion(BST *tree, int dat) {
         return newnode;
     }
     if (dat < (*tree)->data) {
-        node *left_child = insert_recursion(&((*tree)->left), dat);
+        treenode *left_child = insert_recursion(&((*tree)->left), dat);
         (*tree)->left = left_child;
         left_child->parent = (*tree);
     } else {
-        node *right_child = insert_recursion(&((*tree)->right), dat);
+        treenode *right_child = insert_recursion(&((*tree)->right), dat);
         (*tree)->right = right_child;
         right_child->parent = (*tree);
     }
@@ -59,7 +59,7 @@ node * insert_recursion(BST *tree, int dat) {
  * @param dat 
  */
 void insert_node(BST *bstree, int dat) {
-    node *newnode = (node *)malloc(sizeof(node));
+    treenode *newnode = (treenode *)malloc(sizeof(treenode));
     if (!newnode) return;
     newnode->data = dat;
     newnode->left = NULL;
@@ -69,8 +69,8 @@ void insert_node(BST *bstree, int dat) {
         *bstree = newnode;
         return;
     } else {
-        node *p = *bstree;
-        node *q = NULL;
+        treenode *p = *bstree;
+        treenode *q = NULL;
 
 
         while (p != NULL) {
@@ -125,8 +125,8 @@ void postorder(BST tree) {
     if (tree == NULL) 
         return;
     
-    node *p = tree;
-    node *q = NULL;
+    treenode *p = tree;
+    treenode *q = NULL;
   
 
     Stack datastk;
@@ -142,13 +142,12 @@ void postorder(BST tree) {
 
         p = p->left;
          
-        
         p = pop(&datastk);
         
     
         if (p) {
             if (p->right && p->right == peek(datastk)) {
-                node *pop_right = pop(&datastk);
+                treenode *pop_right = pop(&datastk);
 
                 push(&datastk, p);
                 p = p->right;
@@ -211,7 +210,7 @@ int search_node(BST tree, int element) {
     if (tree == NULL)
         return 0;
 
-    node *p = tree;
+    treenode *p = tree;
 
     while (p != NULL) {
         if (p->data == element) {
@@ -230,7 +229,7 @@ int search_node(BST tree, int element) {
 
 /*Write is leaf function*/
 
-int is_leaf(node *p) {
+int is_leaf(treenode *p) {
     if (p->left == NULL && p->right == NULL)
         return 1;
     else
@@ -245,7 +244,7 @@ int is_leaf(node *p) {
  * @return 0/1 if node deletion succeedes/fails
  */
 int removeNode(BST *tree, int misno) {
-    node *p = search(*tree, misno);
+    treenode *p = search(*tree, misno);
 
     // Tree does not exist
     if (p == NULL) {
@@ -263,7 +262,7 @@ int removeNode(BST *tree, int misno) {
 		}
 
         // leaf node (no left/right child)
-        node *temp = p->parent;
+        treenode *temp = p->parent;
         if( p->parent->left == p){
             p->parent->left = NULL;
         }
@@ -277,7 +276,7 @@ int removeNode(BST *tree, int misno) {
     }
     else if(p->left == NULL && p->right != NULL) {
         // only has right child
-        node *temp = p->right;
+        treenode *temp = p->right;
         if (p->parent->right == p) {
             p->parent->right = temp;
         }
@@ -293,7 +292,7 @@ int removeNode(BST *tree, int misno) {
     }
     else if(p->left != NULL && p->right == NULL) {   
         // only has left child
-        node *temp = p->left;
+        treenode *temp = p->left;
         if (p->parent->right == p) {
             p->parent->right = temp;
         }
@@ -306,7 +305,7 @@ int removeNode(BST *tree, int misno) {
         return 1;
     } else if (p->left != NULL && p->right != NULL) { 
         // node has both child
-        node *successor = inorderSuccessor(p);
+        treenode *successor = inorderSuccessor(p);
 
         // node to be deleted is root of whole tree. Change the original root to
         // point it to new successor
@@ -314,7 +313,7 @@ int removeNode(BST *tree, int misno) {
             *tree = successor;
         }
 
-        node *q = successor->right;
+        treenode *q = successor->right;
         
         // separate left branch of node to be deleted and set it to sucessor
         successor->left = p->left;
@@ -369,7 +368,18 @@ int removeNode(BST *tree, int misno) {
 
         return 1;
     }
-	
+
+}
 
 
+int inorder_count_before_data(BST tree, int data) {
+    int count = 0;
+    if (tree == NULL) 
+        return -1;
+    inorder_traverse(tree->left);
+    if (tree->data != data) {
+        count++;
+    }
+    inorder_traverse(tree->right);
+    return count;
 }

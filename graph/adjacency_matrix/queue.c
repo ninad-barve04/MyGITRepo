@@ -62,7 +62,7 @@ int deQueue(Queue *q) {
 }
 
 
-void traverse(Queue q) {
+void traverseQ(Queue q) {
     node *p = q.front;
     if (p == NULL) {
         printf("List is empty!\n");

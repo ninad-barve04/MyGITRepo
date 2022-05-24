@@ -65,7 +65,7 @@ void heapify(Heap *heap, int index) {
  */
 void traverseHeap(Heap heap) {
     int index = 0;
-    while (index < heap.next) {
+    while (index < heap.size) {
         printf("%d - ", heap.array[index]);
         index++;
     }
@@ -81,11 +81,14 @@ void traverseHeap(Heap heap) {
  */
 int deleteHeap(Heap *heap) {
     int root = heap->array[0];
-    printf("heap->next == %d\n", heap->next);
+    printf("root == %d\n", root);
+    --(heap->next);
+    int temp = 0;
+    temp = heap->array[0];
+    heap->array[0] = heap->array[heap->next];
+    heap->array[heap->next] = temp;
 
-    heap->array[0] = heap->array[--(heap->next)];
-    heap->next--;
-
+    
     heapifyDelete(heap, 0);
 
     return root;
@@ -98,12 +101,12 @@ void heapifyDelete(Heap *heap, int root) {
     int right = 2 * largest + 2;
 
     // If left child larger than root
-    if (left < heap->size && heap->array[0] < heap->array[left]) {
+    if (left < heap->next && heap->array[0] < heap->array[left]) {
         largest = left;
     }
     
     // If right child greater than root
-    if (right < heap->size && heap->array[0] < heap->array[right]) {
+    if (right < heap->next && heap->array[0] < heap->array[right]) {
         largest = right;
     }
 

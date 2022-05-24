@@ -18,9 +18,13 @@ int main()
     deQueue(&a);
     deQueue(&a);
     deQueue(&a);
-
+    deQueue(&a);
+    deQueue(&a);
+    deQueue(&a);
+    deQueue(&a);
     traverse(a);
 
+    printf("Is empty %d\n", isEmptyQueue(a));
 
     return 0;
 }
