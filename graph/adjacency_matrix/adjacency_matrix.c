@@ -30,7 +30,7 @@ void init_graph(GraphMatrix *graph, char *filename) {
 }
 
 
-void print_graph(GraphMatrix *graph) {
+void display_graph(GraphMatrix *graph) {
     for (int i = 0; i < graph->vertices; i++) {
         for (int j = 0; j < graph->vertices; j++) {
             printf("%d ", graph->matrix[i][j]);
@@ -40,9 +40,10 @@ void print_graph(GraphMatrix *graph) {
     return;
 }
 
-int get_indegree(GraphMatrix *graph, int vertex) {
+int in_degree(GraphMatrix *graph, int vertex) {
     int ideg = 0;
     for (int i = 0; i < graph->vertices; i++) {
+        printf("%d\n", graph->matrix[i][vertex]);
         if (graph->matrix[i][vertex]) {
             ideg++;
         }
@@ -50,7 +51,7 @@ int get_indegree(GraphMatrix *graph, int vertex) {
     return ideg;
 }
 
-int get_outdegree(GraphMatrix *graph, int vertex) {
+int out_degree(GraphMatrix *graph, int vertex) {
     int odeg = 0;
     for (int i = 0; i < graph->vertices; i++) {
         if (graph->matrix[vertex][i]) {
@@ -63,10 +64,10 @@ int get_outdegree(GraphMatrix *graph, int vertex) {
 int print_connected_vertices(GraphMatrix *graph, int vertex) {
     for (int i = 0; i < graph->vertices; i++) {
         if (graph->matrix[i][vertex]) {
-            printf("Connected %d <=> %d\n", i, vertex);
+            printf("Connected %d ==> %d\n", i, vertex);
         }
         if (graph->matrix[vertex][i]) {
-            printf("Connected %d <=> %d\n", vertex, i);
+            printf("Connected %d ==> %d\n", vertex, i);
         }
     }
 }
@@ -123,12 +124,7 @@ void BFS(GraphMatrix *graph, int start) {
 }
 
 
-int count_components(GraphMatrix *graph) {
-
-}
-
-
-void DFS1(GraphMatrix *graph, int start) {
+void DFS_iter(GraphMatrix *graph, int start) {
     Stack s;
     init_stack(&s, graph->vertices);
 
@@ -156,14 +152,14 @@ void DFS1(GraphMatrix *graph, int start) {
 }
 
 
-void DFS_R(GraphMatrix *graph, int start, int *visited) {
+void DFS_actual_rec(GraphMatrix *graph, int start, int *visited) {
     visited[start] = 1;
 
     printf("%d - ", start);
 
     for (int i = 0; i < graph->vertices; i++) {
         if (graph->matrix[start][i] && !visited[i]) {
-            DFS_R(graph, i, visited);
+            DFS_actual_rec(graph, i, visited);
         }
     }
 
@@ -171,9 +167,81 @@ void DFS_R(GraphMatrix *graph, int start, int *visited) {
 }
 
 
-void DFS2(GraphMatrix *graph, int start) {
+void DFS_rec(GraphMatrix *graph, int start) {
     int *visited = (int *)calloc(graph->vertices, sizeof(int));
-    DFS_R(graph, start, visited);
+    DFS_actual_rec(graph, start, visited);
     printf("END\n");
     return;
 }
+
+
+
+
+void BFS_actual(GraphMatrix *graph, int start, int *visited) {
+    
+    Queue q;
+    init_queue(&q);
+    
+    
+    int index = 0;
+    
+    
+    visited[start] = 1;
+    enQueue(&q, start);
+    
+    int popped = 0;
+    while (!isEmptyQueue(q)) {
+        popped = deQueue(&q);
+
+        index++;
+        
+        for (int j = 0; j < graph->vertices; j++) {
+            if (graph->matrix[popped][j] != 0 && !visited[j]) {
+                visited[j] = 1;
+                enQueue(&q, j);
+            }
+        }
+    }
+
+    return;
+    
+}
+
+
+int number_of_components(GraphMatrix *graph) {
+    int count = 1;
+    int flag = 0;
+    int *visited = (int *)malloc(sizeof(int) * graph->vertices);
+    for (int i = 0; i < graph->vertices; i++) {
+        visited[i] = 0;
+    }
+    BFS_actual(graph, 0, visited);
+
+    for (int i = 0; i < graph->vertices; i++) {
+        if (visited[i] == 0) {
+            flag = 1;
+        }
+    }
+
+    int i = 0;
+    while (flag) {
+        flag = 0;
+
+        for (i = 0; i < graph->vertices; i++) {
+            if (visited[i] == 0) {
+                flag = 1;
+                count++;
+                break;
+            }
+        }
+        if (flag == 0) {
+            break;
+        }
+
+        BFS_actual(graph, i, visited);
+    }
+    
+    
+    return count;
+}
+

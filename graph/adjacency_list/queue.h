@@ -1,3 +1,6 @@
+#ifndef QUEUE_H
+#define QUEUE_H (1)
+
 typedef struct node {
     int data;
     struct node * next;
@@ -16,3 +19,4 @@ int deQueue(Queue *q);
 void traverse(Queue q);
 int isEmptyQueue(Queue q);
 
+#endif /*ifndef QUEUE_H*/

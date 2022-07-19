@@ -1,0 +1,497 @@
+# include <stdio.h>
+# include <stdlib.h>
+# include <limits.h>
+
+typedef struct node{
+    int vertex, weight;
+    struct node* next;
+}node;
+
+typedef struct graph{
+    int size;
+    node** arr;
+}graph;
+
+typedef struct queue{
+  int size;
+  int front;
+  int rear;
+  int *arr;
+}queue;
+
+typedef struct edge{
+  int start;
+  int end;
+  int weight;
+}edge;
+
+void initg(graph* g, char* filename);
+void display(graph g);
+void BFS(graph* g, int s);
+queue* init(queue* q, int x);
+int isemptyq(queue* q);
+int isfullq(queue* q);
+queue* enqueue(queue* q, int val);
+int dequeue(queue* q);
+void DFS(graph* g, int x);
+void DFS_r(graph* g, int x, int* visited);
+int is_directed(graph g);
+int search(node* ll, int x);
+int indegree(graph g, int x);
+int outdegree(graph g, int x);
+int degree(graph g, int x);
+void display_degree(graph g);
+edge* prims(graph* g, int s);
+void display_edges(edge* e, int x);
+int* Dijkstra(graph* g, int s);
+int* Dijkstra_rec(graph* g, int x);
+int* Dijkstra_algo(graph* g, int x, int* final, int* visited);
+int all_one(int* visited, int size);
+void matrix_form(graph g);
+edge* sorted_weight(graph* g);
+int length(graph* g);
+edge* kruskal(graph* g);
+int find(edge* final, int s, int e, int w, int ind);
+
+
+int main(){
+    
+    graph g;
+    initg(&g, "g3.txt");
+    
+    edge* k = kruskal(&g);
+    edge* p = prims(&g, 2);
+    printf("kruskal\n");
+    display_edges(k, g.size - 1);
+    printf("prims\n");
+    display_edges(p, g.size - 1);
+    
+    return 0;
+}
+
+void initg(graph* g, char* filename){
+    int x;
+    FILE *fp;
+    int i, j;
+    fp = fopen(filename, "r");
+    if (fp == NULL){
+        printf("Cant open\n");
+        return;
+    }
+    fscanf(fp, "%d", &x);
+    g->size = x;
+    g->arr = (node**)malloc(sizeof(node*) * g->size);
+    for (int i=0;i<g->size;i++)
+        g->arr[i] = NULL;
+    
+    for (int i=0;i<g->size;i++){
+        for (int j=0;j<g->size;j++){
+            int z;
+            fscanf(fp, "%d", &z);
+            if (z != 0){
+                node * nn = (node*)malloc(sizeof(node));
+                nn->weight = z;
+                nn->vertex = j;
+                nn->next = NULL;
+                nn->next = g->arr[i];
+                g->arr[i] = nn;
+            }
+        }
+    }
+    return;
+}
+
+void display(graph g){
+    for (int i=0;i<g.size;i++){
+        node* p = g.arr[i];
+        while(p != NULL){
+            printf("v%d -> v%d with weigth %d\n", i, p->vertex, p->weight);
+            p = p->next;
+        }
+    }
+}
+
+queue* init(queue* q, int x){
+  q=(queue*)malloc(sizeof(queue));
+  q->size=x;
+  q->front=-1;
+  q->rear=-1;
+  q->arr=(int*)malloc(q->size*sizeof(int));
+  return q;
+}
+
+int isemptyq(queue* q){
+  if (q->front==-1 || q->rear==-1){
+    return 1;
+  }
+  return 0;
+}
+
+int isfullq(queue* q){
+  if ((q->rear+1)%q->size==q->front){
+    return 1;
+  }
+  return 0;
+}
+
+queue* enqueue(queue* q, int val){
+  if (isfullq(q)){
+    printf("Not possible to enqueue\n");
+  }
+  else{
+    
+    if (isemptyq(q)){
+      q->rear=(q->rear+1)%q->size;
+      q->arr[q->rear]=val;
+      q->front=(q->front+1)%q->size;
+    }
+    else{
+      q->rear=(q->rear+1)%q->size;
+      q->arr[q->rear]=val;
+    }     
+  }
+  return q;
+}
+
+int dequeue(queue* q){
+  int x;
+  if (isemptyq(q)){
+    printf("Not possible to dequeue\n");
+  }
+  else{
+    //q->front=(q->front+1)%q->size;
+    if (q->front==q->rear && (q->front!=-1 || q->rear!=-1)){
+      //q->front=(q->front+1)%q->size;
+      x=q->arr[q->front];
+      q->front=-1;
+      q->rear=-1;
+      return x;
+    }
+    else{      
+      x=q->arr[q->front];
+      q->front=(q->front+1)%q->size;
+      return x;
+    }
+  }
+}
+
+void BFS(graph* g, int s){
+    queue* q = init(q, g->size);
+    int * visited = calloc(g->size, sizeof(int));
+    int v;
+    q = enqueue(q, s);
+    visited[s] = 1;
+    printf("%d ", s);
+
+    while(!isemptyq(q)){
+        v = dequeue(q);
+        node* p = g->arr[v];
+        for (int i=0;i<g->size;i++){
+            while (p){
+                if (!visited[p->vertex]){
+                    printf("%d ", p->vertex);
+                    q = enqueue(q, p->vertex);
+                    visited[p->vertex] = 1;
+                    // break;
+                }
+                // else{
+                    p = p->next;
+                // }
+            }
+        }
+    }
+    return;
+}
+
+void DFS(graph* g, int x){
+    int * visited = calloc(g->size, sizeof(int));
+    DFS_r(g, x, visited);
+}
+
+void DFS_r(graph* g, int x, int* visited){
+    printf("%d ", x);
+    visited[x] = 1;
+    node* p = g->arr[x];
+    while (p != NULL){
+      if (! visited[p->vertex])
+        DFS_r(g, p->vertex, visited);
+      p = p->next;
+    }
+}
+
+int is_directed(graph g){
+  for (int i=0;i<g.size;i++){
+    node* p = g.arr[i];
+    if (! search(g.arr[p->vertex], i))
+      return 1;
+  }
+  return 0;
+}
+
+int search(node* ll, int x){
+  while (ll != NULL){
+    if (ll->vertex == x)
+      return 1;
+    ll = ll->next;
+  }
+  return 0;
+}
+
+int indegree(graph g, int x){
+  int count = 0;
+  for (int i=0;i<g.size;i++){
+    if (search(g.arr[i], x))
+      count++;
+  }
+  return count;
+}
+
+int outdegree(graph g, int x){
+  node* p = g.arr[x];
+  int count = 0;
+  while (p != NULL){
+    count++;
+    p = p->next;
+  }
+  return count;
+}
+
+int degree(graph g, int x){
+  return indegree(g, x) + outdegree(g, x);
+}
+
+void display_degree(graph g){
+  for (int i=0;i<g.size;i++){
+    if (is_directed(g)){
+      printf("\nIndegree of vertex %d is %d\n", i, indegree(g, i));
+      printf("Outdegree of vertex %d is %d\n", i, outdegree(g, i));
+      printf("Degree of vertex %d is %d\n", i, degree(g, i));
+    }
+    else
+      printf("Degree of vertex %d is %d\n", i, degree(g, i)/2);
+  }
+}
+
+edge* prims(graph* g, int s){
+  int* visited = calloc(g->size, sizeof(int));
+  visited[s] = 1;
+  edge* edges = (edge*)malloc(sizeof(edge) * g->size - 1);
+  for (int i=0;i<g->size - 1;i++){
+    edge e;
+    e.weight = INT_MAX;
+    for (int j=0;j<g->size;j++){
+      if (visited[j]){
+        node* p = g->arr[j];
+        while(p){
+          if (!visited[p->vertex] && p->weight < e.weight){
+            e.weight = p->weight;
+            e.start = j;
+            e.end = p->vertex;
+          }
+          p = p->next;
+        }
+      }
+    }
+    visited[e.end] = 1;
+    edges[i] = e;
+  }
+  return edges;
+}
+
+void display_edges(edge* e, int x){
+  for (int i=0;i<x;i++){
+    printf("( %d, %d ) --> %d\n", e[i].start, e[i].end, e[i].weight);
+  }
+  return;
+}
+
+int* Dijkstra(graph* g, int s){
+  int* visited = calloc(g->size, sizeof(int));
+  int* final = (int*)malloc(sizeof(int) * g->size);
+  for (int i = 0;i<g->size;i++){
+      final[i] = INT_MAX;
+  }   
+  int v = s;
+  final[v] = 0;
+  visited[v] = 1;
+  for (int j=0;j<g->size-1;j++){
+    node* p = g->arr[v];
+    while(p){
+      if (p->weight + final[v] < final[p->vertex]){
+        final[p->vertex] = p->weight + final[v];
+      }
+      p = p->next;
+    }
+    int min_v = -1;
+    int min_weight = INT_MAX;
+    for (int k=0;k<g->size;k++){
+      if (!visited[k]){
+        if (final[k] < min_weight){
+          min_weight = final[k];
+          min_v = k;
+        }
+      }
+    }
+    v = min_v;
+    visited[v] = 1;
+  }
+  return final;
+}
+
+int* Dijkstra_algo(graph* g, int x, int* final, int* visited){
+    if (all_one(visited, g->size))
+      return final;
+    
+    visited[x] = 1;
+    node* p = g->arr[x];
+    while(p != NULL){
+      if (!visited[p->vertex]){
+        if (p->weight + final[x] < final[p->vertex]){
+          final[p->vertex] = p->weight + final[x]; 
+        }
+      }
+      p = p->next;
+    }
+    int min_v = -1;
+    int min_weight = INT_MAX;
+    for (int k=0;k<g->size;k++){
+      if (!visited[k]){
+        if (final[k] < min_weight){
+          min_weight = final[k];
+          min_v = k;
+        }
+      }
+    }
+    visited[min_v] = 1;
+    return Dijkstra_algo(g, min_v, final, visited);
+}
+
+int* Dijkstra_rec(graph* g, int x){
+    int* visited = calloc(g->size, sizeof(int));
+    int* final = calloc(g->size, sizeof(int));
+    for (int i = 0;i<g->size;i++){
+        final[i] = INT_MAX;
+    }   
+    final[x] = 0;
+    return Dijkstra_algo(g, x, final, visited);
+}
+
+int all_one(int* visited, int size){
+  for (int i=0;i<size;i++){
+    if (!visited[i])
+      return 0;
+  }
+  return 1;
+}
+
+void matrix_form(graph g){
+  int** arr = (int**)malloc(sizeof(int*) * g.size);
+
+  for (int  i=0;i<g.size;i++){
+    arr[i] = calloc(g.size, sizeof(int));
+  }
+
+  for (int s=0;s<g.size;s++){
+    node* p = g.arr[s];
+    while(p != NULL){
+      arr[s][p->vertex] = p->weight;
+      p = p->next;
+    }
+  }
+
+  for (int j=0;j<g.size;j++){
+    for (int k=0;k<g.size;k++){
+      printf("%d ", arr[j][k]);
+    }
+    printf("\n");
+  }
+}
+
+edge* sorted_weight(graph* g){
+    edge* temp = (edge*)malloc(sizeof(edge) * (length(g)));
+    int i = 0;
+    edge e;
+    node* p;
+    for (int j=0;j<g->size;j++){
+        p = g->arr[j];
+        while(p){
+            e.start = j;
+            e.end = p->vertex;
+            e.weight = p->weight;
+            temp[i] = e;
+            i++;
+            p = p->next;
+        }
+    }
+    for (int i=0;i<length(g)-1;i++){
+        for (int j=0;j<length(g)-1-i;j++){
+            if (temp[j].weight > temp[j+1].weight){
+                edge t = temp[j];
+                temp[j] = temp[j+1];
+                temp[j+1] = t;
+            }
+        }
+    }
+    edge* fin = (edge*)malloc(sizeof(edge) * (length(g)/2));
+    int j = 0, k=0;
+    for (int i=0;i<(length(g));i++){
+        if (find(fin, temp[i].start, temp[i].end, temp[i].weight, i) == 1)
+            continue;
+        else
+            fin[k] = temp[i];
+        k++;
+    }
+    return fin;
+}
+
+int length(graph* g){
+    node* p;
+    int c = 0;
+    for (int i=0;i<g->size;i++){
+        p = g->arr[i];
+        while(p){
+            c++;
+            p = p->next;
+        }
+    }
+    return c;
+}
+
+edge* kruskal(graph* g){
+    edge* arr = sorted_weight(g);
+    edge* final = (edge*)malloc(sizeof(edge) * (g->size - 1));
+    int* set = (int*)malloc(sizeof(int) * g->size);
+    for (int i=0;i<g->size;i++)
+        set[i] = i;
+    int i = 0, j = 0;  // j for final and i for arr
+    while(i < (length(g)/2)){
+        // if is_cycle(g, final, arr[i], j)
+        //   i++;
+        // else{
+        //   final[j] = arr[i];
+        //   j++;
+        //   i++;
+        // }
+        if (set[arr[i].start] != set[arr[i].end]){
+            final[j] = arr[i];
+            j++;
+            int x = set[arr[i].end];
+            for (int k=0;k<g->size;k++){
+                if (set[k] == x){
+                    set[k] = set[arr[i].start];
+                }
+            }
+        }
+        i++;
+    }
+    return final;
+}
+
+int find(edge* final, int s, int e, int w, int ind){
+  for (int i=0;i<ind;i++){
+    if (final[i].weight == w && final[i].start == e && final[i].end == s)
+      return 1;
+  }
+  return 0;
+}
+

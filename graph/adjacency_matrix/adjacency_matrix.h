@@ -17,10 +17,10 @@ typedef struct GraphMatrix {
 /**************** Function prototypes ****************/
 
 void init_graph(GraphMatrix *graph, char *filename);
-void print_graph(GraphMatrix *graph);
+void display_graph(GraphMatrix *graph);
 
-int get_indegree(GraphMatrix *graph, int vertex);
-int get_outdegree(GraphMatrix *graph, int vertex);
+int in_degree(GraphMatrix *graph, int vertex);
+int out_degree(GraphMatrix *graph, int vertex);
 
 int print_connected_vertices(GraphMatrix *graph, int vertex);
 
@@ -29,9 +29,13 @@ int is_directed(GraphMatrix *graph);
 
 // Breadth first and depth first searches
 void BFS(GraphMatrix *graph, int start);
-void DFS1(GraphMatrix *graph, int start);
-void DFS_R(GraphMatrix *graph, int start, int *visited);
-void DFS2(GraphMatrix *graph, int start);
+void DFS_iter(GraphMatrix *graph, int start);
+void DFS_actual_rec(GraphMatrix *graph, int start, int *visited);
+void DFS_rec(GraphMatrix *graph, int start);
+
+
+void BFS_actual(GraphMatrix *graph, int start, int *visited);
+int number_of_components(GraphMatrix *graph);
 
 #endif 
 /* ifndef ADJACENCY_MATRIX */

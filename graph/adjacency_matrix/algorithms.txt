@@ -1,0 +1,33 @@
+// ? Prim's algorithm
+// ? edge *Prims(Graph *g, int start)
+// ? 1) Visited initialize
+// ? 2) malloc edge array
+// ? 3) mask start node as visited
+// ? 4) int minimum_weight = INT_MAX
+// ? 5) Main mst loop to select n-1 edges
+// ?    nested for loop to find minmum edge. find minimum
+// ?    array element 
+// ?    minimum_weight = graph->array[i][j]
+// ?    
+// ?    coming out of both for lops, we have minimum edge
+
+
+
+/************
+ * !Dijkstra's Algorithm!
+ * ? declare visited array and initialize 
+ * ? malloc cost array and initialize it to INT_MAX
+ * ? go to ith row of graph and select miimum distance such that vertex is not visited
+ * ? whatever is the new minimum,  mark it as visited
+ * ? * 
+ */
+
+/**
+ * ? relaxation step
+ * ? if via distance is less than the direct distance calculated so far?
+ * ? start = 1
+ * ? if ((1->m dist) + (m->j dist)) > 1->j dist? If yes, change 1->j distanceq
+ */
+
+
+

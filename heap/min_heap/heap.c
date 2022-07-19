@@ -1,3 +1,14 @@
+/**
+ * @file heap.c
+ * @author Ninad Barve (ninad.barve04@gmail.com)
+ * @brief Min heap finctions
+ * @version 0.1
+ * @date 2022-07-14
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,14 +50,14 @@ void insertHeap(Heap *heap, int data) {
 
 
 /**
- * @brief Heapify for MAX HEAP
+ * @brief Heapify for MIN Heap after insertion. Bottom up heapification
  * 
  * @param heap  (Heap *) pointer reference to the heap
  * @param index (int) index of new added element to heap
  */
 void heapify(Heap *heap, int index) {
     
-    if (heap->array[index] > heap->array[(index-1)/2]) {
+    if (heap->array[index] < heap->array[(index-1)/2]) {
         int temp = 0;
         temp = heap->array[(index-1)/2];
         heap->array[(index-1)/2] = heap->array[index];
@@ -95,29 +106,35 @@ int deleteHeap(Heap *heap) {
 }
 
 
+/**
+ * @brief Heapify for MIN heap after deletion. Top down heapification
+ * 
+ * @param heap 
+ * @param root 
+ */
 void heapifyDelete(Heap *heap, int root) {
-    int largest = root;
-    int left  = 2 * largest + 1;
-    int right = 2 * largest + 2;
+    int smallest = root;
+    int left  = 2 * smallest + 1;
+    int right = 2 * smallest + 2;
 
-    // If left child larger than root
-    if (left < heap->next && heap->array[0] < heap->array[left]) {
-        largest = left;
+    // If left child smaller than root
+    if (left < heap->next && heap->array[root] > heap->array[left]) {
+        smallest = left;
     }
     
     // If right child greater than root
-    if (right < heap->next && heap->array[0] < heap->array[right]) {
-        largest = right;
+    if (right < heap->next && heap->array[smallest] > heap->array[right]) {
+        smallest = right;
     }
 
     // 
-    if (largest != root) {
+    if (smallest != root) {
         int temp = 0;
-        temp = heap->array[largest];
-        heap->array[largest] = heap->array[root];
+        temp = heap->array[smallest];
+        heap->array[smallest] = heap->array[root];
         heap->array[root] = temp;
 
-        heapifyDelete(heap, largest);
+        heapifyDelete(heap, smallest);
     }
 
 }
