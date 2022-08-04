@@ -1,7 +1,7 @@
 #ifndef AVL_ROTAT_H
 #define AVL_ROTAT_H (1)
 
-#include "avl.h"
+#include "red_black.h"
 
 void performRotation(AVL *tree, avlnode *imbalanced, int newdata);
 void LLrotation(AVL *tree, avlnode *rotatenode);

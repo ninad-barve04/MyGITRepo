@@ -9,3 +9,4 @@ clean:
 	-rm a.out
 	-rm avltree
 	-rm *.o
+	-rm debug

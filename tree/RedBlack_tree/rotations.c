@@ -1,6 +1,7 @@
-#include "avl.h"
-#include "avl_rotations.h"
-#include "avl_utilities.h"
+#include <stdio.h>
+
+#include "red_black.h"
+#include "rotations.h"
 
 
 /**
@@ -10,7 +11,7 @@
  * @param imbalanced node at which imbalance is seen
  * @param newmonth new added node which caused the imbalance
  */
-void performRotation(AVL *tree, avlnode *imbalanced, int newdata) {
+void performRotation(RBtree *tree, rbnode *imbalanced, int newdata) {
     // 1: LL
     // 2: LR
     // 3: RR
@@ -52,15 +53,15 @@ void performRotation(AVL *tree, avlnode *imbalanced, int newdata) {
  * @param tree 
  * @param rotatenode 
  */
-void LLrotation(AVL *tree, avlnode *rotatenode) {
-    avlnode *A = rotatenode;
-    avlnode *B = A->left;
+void LLrotation(RBtree *tree, rbnode *rotatenode) {
+    rbnode *A = rotatenode;
+    rbnode *B = A->left;
 
     if(rotatenode == *tree){
         *tree = B;
     }
-    avlnode *T2 = B->right;
-    avlnode *Ap = NULL;
+    rbnode *T2 = B->right;
+    rbnode *Ap = NULL;
 
     if (A->parent != NULL) {
         Ap = A->parent;
@@ -81,8 +82,6 @@ void LLrotation(AVL *tree, avlnode *rotatenode) {
         T2->parent = A;
     }
     // After rotation, balance factor of the two main nodes becomes zero
-    A->balance_factor = 0;
-    B->balance_factor = 0;
 
     return;
 }
@@ -94,15 +93,15 @@ void LLrotation(AVL *tree, avlnode *rotatenode) {
  * @param tree 
  * @param rotatenode 
  */
-void RRrotation(AVL *tree, avlnode *rotatenode) {
-    avlnode *A = rotatenode;
-    avlnode *B = A->right;
+void RRrotation(RBtree *tree, rbnode *rotatenode) {
+    rbnode *A = rotatenode;
+    rbnode *B = A->right;
 
     if(rotatenode == *tree){
         *tree = B;
     }
-    avlnode *T2 = B->left;
-    avlnode *Ap = NULL;
+    rbnode *T2 = B->left;
+    rbnode *Ap = NULL;
 
     if (A->parent != NULL) {
         Ap = A->parent;
@@ -123,8 +122,6 @@ void RRrotation(AVL *tree, avlnode *rotatenode) {
         T2->parent = A;
     }
     // After rotation, balance factor of the two main nodes becomes zero
-    A->balance_factor = 0;
-    B->balance_factor = 0;
 
     return;
 }
@@ -136,7 +133,7 @@ void RRrotation(AVL *tree, avlnode *rotatenode) {
  * @param tree 
  * @param rotatenode 
  */
-void RLrotation(AVL *tree, avlnode *rotatenode) {
+void RLrotation(RBtree *tree, rbnode *rotatenode) {
     LLrotation(tree, rotatenode->right);
     RRrotation(tree, rotatenode);
     return;
@@ -149,7 +146,7 @@ void RLrotation(AVL *tree, avlnode *rotatenode) {
  * @param tree 
  * @param rotatenode 
  */
-void LRrotation(AVL *tree, avlnode *rotatenode) {
+void LRrotation(RBtree *tree, rbnode *rotatenode) {
     RRrotation(tree, rotatenode->left);
     LLrotation(tree, rotatenode);
     return;
@@ -161,10 +158,10 @@ void LRrotation(AVL *tree, avlnode *rotatenode) {
  * @param tree 
  * @param rotatenode 
  */
-void RLrotation_independent(AVL *tree, avlnode *rotatenode) {
-    avlnode *A = rotatenode;
-    avlnode *Ar = A->right;
-    avlnode *Arl = Ar->left;
+void RLrotation_independent(RBtree *tree, rbnode *rotatenode) {
+    rbnode *A = rotatenode;
+    rbnode *Ar = A->right;
+    rbnode *Arl = Ar->left;
 
     if(rotatenode == *tree){
         *tree = Arl;
@@ -179,7 +176,7 @@ void RLrotation_independent(AVL *tree, avlnode *rotatenode) {
     Ar->parent = Arl;
     Arl->parent = A;
 
-    avlnode *Ap = NULL;
+    rbnode *Ap = NULL;
     if (A->parent != NULL) {
         Ap = A->parent;
         if (A == Ap->left) {
@@ -193,24 +190,21 @@ void RLrotation_independent(AVL *tree, avlnode *rotatenode) {
     A->right = Arl->left;
     Arl->left = A;
 
-    A->balance_factor = 0;
-    Ar->balance_factor = 0;
-    Arl->balance_factor = 0;
 
     return;
 }
 
 
-void LRrotation_independent(AVL *tree, avlnode *rotatenode) {
-    avlnode *A = rotatenode;
-    avlnode *Al = A->left;
-    avlnode *Alr = Al->right;
+void LRrotation_independent(RBtree *tree, rbnode *rotatenode) {
+    rbnode *A = rotatenode;
+    rbnode *Al = A->left;
+    rbnode *Alr = Al->right;
 
     if(rotatenode == *tree){
         *tree = Alr;
     }
     
-    avlnode *Ap = NULL;
+    rbnode *Ap = NULL;
     if (A->parent != NULL) {
         Ap - A->parent;
         if (A == Ap->left) {
@@ -232,10 +226,6 @@ void LRrotation_independent(AVL *tree, avlnode *rotatenode) {
     Alr->right = A;
     Al->parent = Alr;
     A->parent = Alr;
-
-    A->balance_factor = 0;
-    Al->balance_factor = 0;
-    Alr->balance_factor = 0;
 
     return;
 }

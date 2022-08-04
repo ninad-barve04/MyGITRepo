@@ -57,27 +57,27 @@ treenode* removeNode(treenode *tree, int misno) {
 
 
 
-  int a[] = {100, 200, 50, 30, 35, 40, 45, 10, 175, 150, 300};
-    int a[] = {100, 50, 200, 30, 175, 300, 10, 40, 150, 190, 45};
-    char *name[] = {"Nin", "man", "mil", "bat", "cat", "boy", "horse", "fish", "team", "jeff who", "elon"};
+//   int a[] = {100, 200, 50, 30, 35, 40, 45, 10, 175, 150, 300};
+//     int a[] = {100, 50, 200, 30, 175, 300, 10, 40, 150, 190, 45};
+//     char *name[] = {"Nin", "man", "mil", "bat", "cat", "boy", "horse", "fish", "team", "jeff who", "elon"};
     
      
-    for (int i = 0; i < 11; i++) {
-        insertNode(&tree1, a[i], name[i]);
-    }
+//     for (int i = 0; i < 11; i++) {
+//         insertNode(&tree1, a[i], name[i]);
+//     }
     
 
-    postorder(tree1);
+//     postorder(tree1);
 
-   // displayLevel(tree1, 2);   
+//    // displayLevel(tree1, 2);   
 
-    removeNode(&tree1,300);
+//     removeNode(&tree1,300);
 
-    printf("after removal\n");
+//     printf("after removal\n");
 
-    //displayLevel(tree1, 2);
+//     //displayLevel(tree1, 2);
 
    
-    // printf("\n");
+//     // printf("\n");
 
-   postorder(tree1);
+//    postorder(tree1);

@@ -1,0 +1,202 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+    int data;
+    struct node *right, *down;
+} node;
+
+typedef struct SparseMatrix
+{
+    int r, c;
+    node **row, **col;
+} SparseMatrix;
+
+void init_SparseMatrix(SparseMatrix *M, char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    fscanf(fp, "%d", &M->r);
+    fscanf(fp, "%d", &M->c);
+    int **A;
+    A = (int **)malloc(sizeof(int *) * M->r);
+    for (int i = 0; i < M->r; i++)
+    {
+        A[i] = (int *)malloc(sizeof(int) * M->c);
+    }
+
+    for (int i = 0; i < M->r; i++)
+    {
+        for (int j = 0; j < M->c; j++)
+        {
+            fscanf(fp, "%d", &A[i][j]);
+        }
+    }
+    fclose(fp);
+
+    M->row = (node **)malloc(sizeof(node *) * M->r);
+    M->col = (node **)malloc(sizeof(node *) * M->c);
+
+    for (int i = 0; i < M->r; i++)
+        M->row[i] = NULL;
+    for (int i = 0; i < M->c; i++)
+        M->col[i] = NULL;
+
+    node *p = NULL;
+
+    for (int i = 0; i < M->r; i++)
+    {
+        for (int j = 0; j < M->c; j++)
+        {
+            if (A[i][j] != 0)
+            {
+                node *nn = (node *)malloc(sizeof(node));
+                nn->data = A[i][j];
+                nn->down = NULL;
+                nn->right = NULL;
+
+                if (!M->row[i])
+                    M->row[i] = nn;
+                else
+                {
+                    p = M->row[i];
+                    while (p->right)
+                    {
+                        p = p->right;
+                    }
+                    p->right = nn;
+                }
+
+                if (!M->col[j])
+                    M->col[j] = nn;
+                else
+                {
+                    p = M->col[j];
+                    while (p->down)
+                    {
+                        p = p->down;
+                    }
+                    p->down = nn;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < M->r; i++)
+    {
+        free(A[i]);
+    }
+    free(A);
+    return;
+}
+
+void display(SparseMatrix M)
+{
+    for (int i = 0; i < M.r; i++)
+    {
+        node *p = M.row[i];
+        int found = 0;
+        int column = 0;
+
+        if (!p)
+        {
+            for (int j = 0; j < M.c; j++)
+            {
+                printf("0 ");
+            }
+            printf("\n");
+        }
+
+        else
+        {
+            for (int j = 0; j < M.c; j++)
+            {
+                node *q = M.col[j];
+                if (!q)
+                    printf("0 ");
+                else
+                {
+                    while (q)
+                    {
+                        if (q == p)
+                        {
+                            printf("%d ", p->data);
+                            p = p->right;
+                            break;
+                        }
+
+                        else
+                        {
+                            q = q->down;
+                            if (!q)
+                                printf("0 ");
+                        }
+                    }
+                }
+
+                if (!p)
+                {
+                    for (int k = 0; k < 4 - j; k++)
+                    {
+                        printf("0 ");
+                    }
+                    break;
+                }
+            }
+            printf("\n");
+        }
+    }
+    return;
+}
+
+int main()
+{
+    SparseMatrix M1;
+    init_SparseMatrix(&M1, "data.txt");
+    display(M1);
+}
+
+
+// Aditya
+void mutlipy(sparse S1,sparse S2,sparse *S3){
+    if(S1.col != S2.row){
+        printf("matrix multiplication not possible");
+        return;
+    }
+    S3->row = S1.row;
+    S3->col = S2.col;
+    S3->r = (node*)malloc(sizeof(node)*(S3->row));
+    S3->c = (node*)malloc(sizeof(node)*(S3->col));
+    for(int i=0;i<S3->row;i++){
+        for(int j=0;j<S3->col;j++){
+            int sum =0;
+            node* r1 = S1.r[i];
+            node* c1 = S2.c[j];
+            while(r1 && c1){
+                if(r1->j<c1->i){
+                    sum = sum + 0;
+                    r1 = r1->right;
+                }
+                else if(r1->j > c1->i){
+                    sum = sum + 0;
+                    c1 = c1->down;
+                }
+                else{
+                    sum = sum + (r1->data)*(c1->data);
+                    c1 = c1->down;
+                    r1 = r1->right;
+                }
+            }
+            node* p = (node*)malloc(sizeof(node));
+            p->data = sum;
+            p->i = i;
+            p->j = j;
+            p->down = NULL;
+            p->right = NULL;
+            insert(p,S3,i,j);
+        }
+    }
+    return;
+}
+
+
