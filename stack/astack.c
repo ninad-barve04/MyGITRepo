@@ -35,6 +35,16 @@ int pop(Stack *stk) {
 }
 
 
+int peek(Stack *stk) {
+    int num;
+    if (!isEmpty(stk)) {
+        num = stk->array[stk->top];
+    } else {
+        num = INT_MIN;
+    }
+    return num;
+}
+
 int isFull(Stack *s) {
     if (s->top==s->size-1)
         return 1;

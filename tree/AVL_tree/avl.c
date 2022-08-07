@@ -175,10 +175,14 @@ int removeNode(AVL *tree, int element) {
             p->parent->left = successor;
         }
 
-        // successor's parent will never have a left node or else, the successor
-        // will be located in that subtree
+        /*
+         * successor's parent will never have a left node or else, the successor
+         * will be located in that subtree
+         */
         successor->parent->left = NULL;
-        // set parent of successor same as parent of node to be deleted 
+        /*
+         * set parent of successor same as parent of node to be deleted 
+         */
         successor->parent = p->parent;
         
         if (q != NULL) {
@@ -199,13 +203,15 @@ int removeNode(AVL *tree, int element) {
         }
 
     }
-
+    /*
+     * Readjust the balance factor of the tree
+     */
     adjustBalanceFactor(&parentnode);
     avlnode *imbalanced = findImbalance(parentnode);
     if (imbalanced == NULL) {
         return 1;
     }
-    //printf("Imbalanced at data = %d\n", imbalanced->month);
+
     while (imbalanced != NULL) {
         performRotation(tree, imbalanced, element);
         adjustBalanceFactor(&parentnode);
@@ -230,6 +236,7 @@ void traverse(AVL tree, int type) {
     } else if (type == 3) {
         postorderTraversal(tree);
     }
+    printf("END\n");
 }
 
 /**

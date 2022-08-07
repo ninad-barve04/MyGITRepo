@@ -39,7 +39,7 @@ void performRotation(AVL *tree, avlnode *imbalanced, int newdata) {
         } else {
             // Right-Left
             printf("\tRL rotation\n\n");
-            RLrotation(tree, imbalanced);
+            RLrotation_independent(tree, imbalanced);
             return;
         }
     }
@@ -169,15 +169,6 @@ void RLrotation_independent(AVL *tree, avlnode *rotatenode) {
     if(rotatenode == *tree){
         *tree = Arl;
     }
-    
-    A->right = Arl;
-    Ar->left = Arl->right;
-    if (Arl->right != NULL) {
-        Arl->right->parent = Ar;
-    }
-    Arl->right = Ar;
-    Ar->parent = Arl;
-    Arl->parent = A;
 
     avlnode *Ap = NULL;
     if (A->parent != NULL) {
@@ -189,9 +180,20 @@ void RLrotation_independent(AVL *tree, avlnode *rotatenode) {
         }
     }
     Arl->parent = Ap;
-    A->parent = Arl;
+
+    if (Arl->left != NULL) {
+        Arl->left->parent = A;
+    }
+    if (Arl->right != NULL) {
+        Arl->right->parent = Ar;
+    }
+
+    Ar->left = Arl->right;
     A->right = Arl->left;
     Arl->left = A;
+    Arl->right = Ar;
+    A->parent = Arl;
+    Ar->parent = Arl;
 
     A->balance_factor = 0;
     Ar->balance_factor = 0;
@@ -212,7 +214,7 @@ void LRrotation_independent(AVL *tree, avlnode *rotatenode) {
     
     avlnode *Ap = NULL;
     if (A->parent != NULL) {
-        Ap - A->parent;
+        Ap = A->parent;
         if (A == Ap->left) {
             Ap->left = Alr;
         } else if (A == Ap->right) {
@@ -227,7 +229,8 @@ void LRrotation_independent(AVL *tree, avlnode *rotatenode) {
     if (Alr->right != NULL) {
         Alr->right->parent = A;
     }
-
+    Al->right = Alr->left;
+    A->left = Alr->right;
     Alr->left = Al;
     Alr->right = A;
     Al->parent = Alr;

@@ -16,7 +16,7 @@ int findHeight(AVL tree) {
         return -1;
     }
     int height = 1+MAX(findHeight(tree->left), findHeight(tree->right));
-    //printf("Height = %d\tNode = %d\n", height, tree->month);
+    // printf("Height = %d\tNode = %d\n", height, tree->data);
     return height;
 }
 
@@ -29,6 +29,7 @@ int findHeight(AVL tree) {
  * @return int 
  */
 int balanceFactor(avlnode *node) {
+    // printf("%p, %p, %p\n", node, node->left, node->right);
     int hl = findHeight(node->left);
     //printf("HL %d\t", hl);
     int hr = findHeight(node->right);
@@ -133,65 +134,4 @@ avlnode *inorderSuccessor(AVL tree) {
     //printf("%d - \n",  p->right->MIS);
     return p;
 }
-
-
-/**
- * @brief Get the Lower Case string of passed string
- * 
- * @param s 
- * @return char* 
- */
-char * getUpperCase(char *s) {
-    int len = strlen(s);
-    char *temp = (char*)malloc( sizeof(char)*len);
-    int i = 0;
-    char c = s[i];
-    while (c != '\0') {
-        if (c >= 'a' && c <= 'z') {
-            c = c - 32;
-        }
-        temp[i] = c;
-        i++;
-        c = s[i];
-    }
-    
-    return temp;
-}
-
-
-/**
- * @brief Get the Month Number correnponding to passed monthname
- * 
- * @param monthname 
- * @return int 
- */
-int getMonthNumber(char *monthname) {
-    monthname = getUpperCase(monthname);
-    if (strcmp(monthname, "APRIL") == 0) {
-        return 1;
-    } else if (strcmp(monthname, "AUGUST") == 0) {
-        return 2;
-    } else if (strcmp(monthname, "DECEMBER") == 0) {
-        return 3;
-    } else if (strcmp(monthname, "FEBRUARY") == 0) {
-        return 4;
-    } else if (strcmp(monthname, "JANUARY") == 0) {
-        return 5;
-    } else if (strcmp(monthname, "JULY") == 0) {
-        return 6;
-    } else if (strcmp(monthname, "JUNE") == 0) {
-        return 7;
-    } else if (strcmp(monthname, "MARCH") == 0) {
-        return 8;
-    } else if (strcmp(monthname, "MAY") == 0) {
-        return 9;
-    } else if (strcmp(monthname, "NOVEMBER") == 0) {
-        return 10;
-    } else if (strcmp(monthname, "OCTOBER") == 0) {
-        return 11;
-    } else if (strcmp(monthname, "SEPTEMBER") == 0) {
-        return 12;
-    }
-}
-
 
